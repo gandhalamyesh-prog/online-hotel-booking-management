@@ -1,0 +1,17 @@
+{
+  "name": "yashaswini-online-hotel-room-booking",
+  "version": "1.0.0",
+  "description": "Yashaswini's Online Hotel Room Booking Management System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.11.5"
+  }
+}
