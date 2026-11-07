@@ -1,44 +1,96 @@
-# Yashaswini's Online Hotel Room Booking Management System
+# Yashaswini Stay — Hotel Room Booking System
 
-## Technologies
-HTML, CSS, JavaScript, Node.js, Express.js and MySQL.
+A simple hotel booking website built with HTML, CSS, JavaScript, Node.js, Express and MySQL.
 
-## Exact database tables
-This project creates exactly these three tables and columns:
-- customers: customer_id, name, email, phone, password
-- rooms: room_id, room_number, room_type, price, capacity, status
-- bookings: booking_id, customer_id, room_id, check_in_date, check_out_date, total_amount, status
+## Features
 
-## Setup on Windows
-1. Install Node.js and MySQL Server / MySQL Workbench.
-2. Open MySQL Workbench and run the complete `database.sql` script.
-3. Extract this ZIP folder.
-4. Open PowerShell or VS Code terminal in the extracted project folder.
-5. Run: `npm install`
-6. Copy `.env.example` to a new file named `.env`.
-7. Edit `.env` and enter your MySQL password. Change `SESSION_SECRET` and `ADMIN_PASSWORD` too.
-8. Run: `npm start`
-9. Open: http://localhost:3000
+### Customer
+- Create an account using personal details.
+- Log in with the email and password used during registration.
+- Browse and search rooms.
+- Book rooms for selected dates.
+- View personal booking history and cancel confirmed bookings.
+
+### Administrator
+- Separate protected admin login.
+- View dashboard totals.
+- Add, edit and delete rooms.
+- View customer bookings and update booking status.
+
+## Project structure
+
+```text
+YashaswiniStay/
+├── app.js
+├── package.json
+├── database.sql
+├── .env.example
+├── config/
+│   └── db.js
+├── middleware/
+│   └── auth.js
+├── routes/
+│   ├── customerRoutes.js
+│   ├── roomRoutes.js
+│   ├── bookingRoutes.js
+│   └── adminRoutes.js
+└── public/
+    ├── *.html
+    ├── css/style.css
+    └── js/*.js
+```
+
+## Setup (Windows PowerShell)
+
+1. Install Node.js and MySQL.
+2. Open this project folder in PowerShell.
+3. Install packages:
+
+   ```powershell
+   npm install
+   ```
+
+4. Open MySQL Workbench, open `database.sql`, and execute the whole script. It creates a separate database named `yashaswini_stay_db` and sample rooms. It does not drop the previous `yashaswini_hotel_booking` database.
+5. Copy `.env.example` to a new file named `.env` in the project root.
+6. Open `.env` and enter your MySQL password in `DB_PASSWORD`.
+7. Set a private admin email and password in `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Also replace `SESSION_SECRET` with a long random value. Do not share the `.env` file.
+8. In PowerShell, start the app:
+
+   ```powershell
+   npm start
+   ```
+
+9. Open **http://localhost:3000** in your browser.
+
+Keep the PowerShell window running while using the website. To stop the server, press `Ctrl + C` in that window.
+
+## Customer login
+
+There is no shared or pre-created customer username/password. A customer selects **Register**, enters their own details, and the application creates their account. The customer is automatically signed in after successful registration. Later, they log in using the same email and password.
+
+Customer passwords are stored as bcrypt hashes, not plain text. Each customer's booking history is restricted to their own account.
 
 ## Administrator login
-Use the values configured in `.env`:
-- Email: `admin@yashaswinihotel.com` (unless changed)
-- Password: `ChangeThisAdminPassword123!` (change this in `.env` before using)
 
-There is no fourth admin table because the requested database design contains exactly three tables. Admin credentials are configured through environment variables.
+Admin access is separate from customer access. Use the private email and password configured in `.env`. Do not use a public/default admin password.
 
-## Customer workflow
-Register -> Login -> Rooms -> Search by dates/type/guest capacity -> Book -> My Bookings -> Cancel.
+## Database connection check
 
-## Admin workflow
-Admin Login -> Dashboard -> Manage Rooms / Manage Bookings.
-The admin can add, edit, and delete rooms (rooms with booking history cannot be deleted), and update booking statuses.
+After starting the server, open:
 
-## Availability and booking safety
-A room is considered available for a requested date range only when it has no overlapping Confirmed booking. Check-out day is treated as available for another booking. Booking creation uses a database transaction and locks the selected room row to reduce double-booking risk. The room `status` field is used for `Available` and `Maintenance`; date-specific reservations are determined from the bookings table.
+**http://localhost:3000/api/health**
 
-## Notes
-- Customer passwords are hashed using bcryptjs.
-- Customer and admin pages use Express sessions.
-- For a real public deployment, use HTTPS, a persistent session store, CSRF protection, rate limiting, and secure cookie settings.
-- The room cards use a simple icon illustration; replace it with your own room photos if desired.
+A successful response includes:
+
+```json
+{
+  "status": "ok",
+  "database": "connected"
+}
+```
+
+## Important
+
+- Do not upload `.env` or `node_modules` to GitHub.
+- The included Express session store is suitable for local development/class projects. A public production deployment needs HTTPS and a persistent session store, plus additional security protections.
+- The previous database is not deleted. This project uses the new database name `yashaswini_stay_db` to avoid mixing it with the older database.

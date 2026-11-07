@@ -39,7 +39,7 @@ app.listen(PORT, async () => {
   try {
     await pool.query('SELECT 1');
     console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Connected to MySQL database: ${process.env.DB_NAME || 'yashaswini_hotel_booking'}`);
+    console.log(`Connected to MySQL database: ${process.env.DB_NAME || 'yashaswini_stay_db'}`);
   } catch (err) {
     console.error('Server started, but MySQL connection failed:', err.message);
     console.error('Check your .env database settings and make sure MySQL is running.');

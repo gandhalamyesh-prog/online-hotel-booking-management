@@ -1,64 +1,39 @@
-
-const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
+const loginForm = document.getElementById('loginForm');
 
 async function submitAuth(form, endpoint) {
-    const message = document.getElementById('message');
-    const button = form.querySelector('button[type="submit"]');
+  const message = document.getElementById('message');
+  const button = form.querySelector('button[type="submit"]');
+  const values = Object.fromEntries(new FormData(form).entries());
 
-    try {
-        button.disabled = true;
-        message.textContent = 'Please wait...';
-        message.style.color = '#555';
+  if (values.email) values.email = values.email.trim().toLowerCase();
 
-        // Get details entered by the customer
-        const formData = new FormData(form);
+  try {
+    if (button) button.disabled = true;
+    showMessage(message, 'Please wait...');
 
-        const customerData = {
-            email: formData.get('email').trim().toLowerCase(),
-            password: formData.get('password')
-        };
+    const result = await api(`/api/customers/${endpoint}`, {
+      method: 'POST',
+      body: JSON.stringify(values)
+    });
 
-        // Send customer details to Express backend
-        const response = await fetch(`/api/customers/${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify(customerData)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.message || 'Login failed.');
-        }
-
-        message.textContent = result.message;
-        message.style.color = 'green';
-
-        // Redirect after successful login
-        window.location.href = 'rooms.html';
-
-    } catch (error) {
-        message.textContent = error.message;
-        message.style.color = 'red';
-        console.error('Login error:', error);
-
-    } finally {
-        button.disabled = false;
-    }
+    showMessage(message, result.message || 'Success');
+    // Registration creates the customer session; login creates it after password verification.
+    window.location.href = 'rooms.html';
+  } catch (error) {
+    showMessage(message, error.message || 'Unable to complete the request.', true);
+    console.error('Customer authentication error:', error);
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
-// Customer login
-loginForm?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    submitAuth(loginForm, 'login');
+loginForm?.addEventListener('submit', event => {
+  event.preventDefault();
+  submitAuth(loginForm, 'login');
 });
 
-// Customer registration
-registerForm?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    submitAuth(registerForm, 'register');
+registerForm?.addEventListener('submit', event => {
+  event.preventDefault();
+  submitAuth(registerForm, 'register');
 });

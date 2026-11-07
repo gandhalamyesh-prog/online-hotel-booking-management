@@ -1,7 +1,7 @@
-CREATE DATABASE IF NOT EXISTS yashaswini_hotel_booking
+CREATE DATABASE IF NOT EXISTS yashaswini_stay_db
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE yashaswini_hotel_booking;
+USE yashaswini_stay_db;
 
 -- Table 1: customers (exactly the requested five columns)
 CREATE TABLE IF NOT EXISTS customers (

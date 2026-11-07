@@ -1,7 +1,7 @@
 {
-  "name": "yashaswini-online-hotel-room-booking",
+  "name": "yashaswini-stay-hotel-booking",
   "version": "1.0.0",
-  "description": "Yashaswini's Online Hotel Room Booking Management System",
+  "description": "Yashaswini Stay - Online Hotel Room Booking Management System",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
